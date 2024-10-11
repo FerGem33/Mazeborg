@@ -1,25 +1,55 @@
+from random import choice
+from settings import *
+from support import *
 from robot import Robot
-from maze import Maze
-from code_blocks import CodeBlockManager
-import pygame
+from tile import Tile
+from camera import CameraGroup
+from panel import Panel
 
-class Game:
+
+class Game(Panel):
     def __init__(self):
-        #self.maze = Maze()
-        self.robot = Robot()
-        #self.code_block_manager = CodeBlockManager()
-        self.visible_group = pygame.sprite.Group()
-        self.visible_group.add(self.robot)
+        super().__init__((0, 0), GAME_WIDTH, HEIGHT, 'cadetblue2')
 
-    def update(self):
-        # Handle updating code block actions
-        self.code_block_manager.update()
-        # Update robot position based on code blocks
-        self.robot.move(self.code_block_manager.get_instructions())
+        # Sprite groups
+        self.visible_sprites = CameraGroup(self.surface)
+        self.collidable_sprites = pygame.sprite.Group()
 
-    def draw(self, screen):
-        # Draw maze, robot, and code blocks
-        self.maze.draw(screen)
-        self.robot.draw(screen)
-        self.code_block_manager.draw(screen)
-    
+        self.robot = None
+        self.create_map()
+
+    def create_map(self):
+        layouts = {
+            'ground': import_csv_layout('map/ground.csv'),
+            'wall': import_csv_layout('map/walls.csv'),
+            'flower': import_csv_layout('map/obj.csv'),
+        }
+        graphs = {
+            'ground': import_folder('assets/images/grass'),
+            'wall': import_folder('assets/images/stone'),
+            'flower': import_folder('assets/images/flower'),
+        }
+
+        for style, layout in layouts.items():
+            for row_index, row in enumerate(layout):
+                for column_index, column in enumerate(row):
+                    if column != '-1':
+                        x = column_index * TILESIZE
+                        y = row_index * TILESIZE
+
+                        """if style == 'ground':
+                            surf = choice(graphs['ground'])
+                            Tile((x, y), [self.visible_sprites], 'ground', surf)"""
+                        if style == 'wall':
+                            Tile((x, y), [self.visible_sprites, self.collidable_sprites], 'wall', graphs['wall'][0])
+                        if style == 'flower':
+                            surf = choice(graphs['flower'])
+                            Tile((x, y), [self.visible_sprites], 'object', surf)
+
+        self.robot = Robot((100, 250), [self.visible_sprites], self.collidable_sprites)
+
+    def run(self):
+        self.surface.fill(self.fill_color)
+        self.visible_sprites.draw(self.robot)
+        self.display.blit(self.surface, self.rect)
+        self.visible_sprites.update()
