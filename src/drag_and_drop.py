@@ -1,6 +1,5 @@
 import pygame
 from settings import *
-from codeblock import CodeBlock
 from panel import Panel, BlockPanel
 
 
@@ -17,14 +16,26 @@ class DragAndDrop(Panel):
         self.drag.add_block((DROP_WIDTH + 30, 30))
         self.drop.add_block((30, 30))
 
+    def to_drag(self, blocks):
+        for block in blocks:
+            self.drop.blocks.remove(block)
+            self.drag.add_block(block.rect.topleft)
+
+    def to_drop(self, blocks):
+        for block in blocks:
+            self.drag.blocks.remove(block)
+            self.drop.add_block(block.rect.topleft)
+
     def run(self, event_list):
         # Draw the drag and drop panels
         self.drag.draw()
         self.drop.draw()
 
         # Update the blocks
-        self.drag.update(event_list)
-        self.drop.update(event_list)
+        from_drag = self.drag.update(event_list)
+        from_drop = self.drop.update(event_list)
+        self.to_drag(from_drop)
+        self.to_drop(from_drag)
 
         # Draw the blocks onto the panel
         for block in self.drag.blocks:

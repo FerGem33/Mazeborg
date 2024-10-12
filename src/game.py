@@ -1,6 +1,6 @@
-from random import choice
 from settings import *
 from support import *
+from random import choice
 from robot import Robot
 from tile import Tile
 from camera import CameraGroup

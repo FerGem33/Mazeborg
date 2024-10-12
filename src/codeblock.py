@@ -40,9 +40,9 @@ class CodeBlock(pygame.sprite.Sprite):
         rect.y += self.panel.offset[1]
         return rect
 
-    def update(self, event_list):
+    def update(self, event_list) -> bool:
         """
-        Updates the block on mouse events.
+        Updates the block on mouse events, returns true if the block is moved out of its panel.
         Parameters
         ----------
         event_list : list
@@ -59,7 +59,7 @@ class CodeBlock(pygame.sprite.Sprite):
                     self.offset_y = self.rect.y - event.pos[1]
 
             # if mouse button is released
-            elif event.type == pygame.MOUSEBUTTONUP:
+            elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if self.dragging:
                     self.dragging = False
                     # return true if the block was released and moved out of its panel

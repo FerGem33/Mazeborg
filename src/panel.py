@@ -60,11 +60,11 @@ class BlockPanel(Panel):
 
         if panel_type == 'drag':
             width = DRAG_WIDTH
-            fill_color = 'cadetblue4'
+            fill_color = 'snow4'
             blocks_color = 'crimson'
         elif panel_type == 'drop':
             width = DROP_WIDTH
-            fill_color = 'cadetblue3'
+            fill_color = 'slategray3'
             blocks_color = 'mediumslateblue'
 
         super().__init__(pos, (width, HEIGHT), draw_surface, offset, fill_color)
@@ -75,15 +75,26 @@ class BlockPanel(Panel):
         """
         Adds a block to the panel.
         Parameters
+        ----------
         pos : tuple
         The relative position of the panel to its draw surface.
         """
         block = CodeBlock(pos, self, self.draw_surface, self.blocks_color)
         self.blocks.add(block)
 
-    def update(self, event_list):
+    def update(self, event_list) -> list:
+        """
+        Updates all blocks in the panel and returns a list of the blocks that were moved out from it.
+        Parameters
+        ----------
+        event_list : list
+        The list of events received from the pygame display.
+        """
+        blocks = []
         for block in self.blocks:
-            block.update(event_list)
+            if block.update(event_list):
+                blocks.append(block)
+        return blocks
 
     def draw(self):
         self.surface.fill(self.fill_color)
