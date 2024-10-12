@@ -1,47 +1,36 @@
 import pygame
 from settings import *
 from codeblock import CodeBlock
+from panel import Panel, BlockPanel
 
 
-class DragAndDrop:
+class DragAndDrop(Panel):
     def __init__(self):
-        self.display = pygame.display.get_surface()
+        pos = (GAME_WIDTH, 0)
+        super().__init__(pos, (DRAG_WIDTH + DROP_WIDTH, HEIGHT), pygame.display.get_surface(), pos)
+        pos = (DROP_WIDTH, 0)
+        self.drag = BlockPanel(pos, 'drag', self.surface, self.offset + pos)
+        pos = (0, 0)
+        self.drop = BlockPanel(pos, 'drop', self.surface, self.offset + pos)
 
-        self.drag_surf = pygame.Surface((DRAG_WIDTH, HEIGHT))
-        self.drop_surf = pygame.Surface((DROP_WIDTH, HEIGHT))
-        self.drag_rect = self.drag_surf.get_rect(topleft=(GAME_WIDTH + DROP_WIDTH, 0))
-        self.drop_rect = self.drop_surf.get_rect(topleft=(GAME_WIDTH, 0))
-        self.drag_color = 'cadetblue4'
-        self.drop_color = 'cadetblue3'
-
-        # CodeBlocks
-        self.drag_blocks = pygame.sprite.Group()
-        self.drop_blocks = pygame.sprite.Group()
-
-        self.drop_blocks.add(CodeBlock((40, 30), 'drop'))
-        self.drag_blocks.add(CodeBlock((40, 230), 'drag'))
-        # self.add_block(CodeBlock((20, 30)), self.drag_blocks)
-
-    def add_block(self, block, group):
-        if group is self.drop_blocks:
-            block.rect.x += GAME_WIDTH
-        if group is self.drag_blocks:
-            block.rect.x += GAME_WIDTH + DROP_WIDTH
-        group.add(block)
+        # Blocks
+        self.drag.add_block((DROP_WIDTH + 30, 30))
+        self.drop.add_block((30, 30))
 
     def run(self, event_list):
-        # Fill the panels with its background color
-        self.drag_surf.fill(self.drag_color)
-        self.drop_surf.fill(self.drop_color)
+        # Draw the drag and drop panels
+        self.drag.draw()
+        self.drop.draw()
 
         # Update the blocks
-        self.drop_blocks.update(event_list)
-        self.drag_blocks.update(event_list)
+        self.drag.update(event_list)
+        self.drop.update(event_list)
 
-        # Draw the blocks into their panels
-        self.drag_blocks.draw(self.drag_surf)
-        self.drop_blocks.draw(self.drop_surf)
+        # Draw the blocks onto the panel
+        for block in self.drag.blocks:
+            block.draw()
+        for block in self.drop.blocks:
+            block.draw()
 
-        # Draw the panels into the screen
-        self.display.blit(self.drag_surf, self.drag_rect)
-        self.display.blit(self.drop_surf, self.drop_rect)
+        # Draw the panel on the screen
+        self.draw_surface.blit(self.surface, self.rect)

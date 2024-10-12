@@ -8,8 +8,11 @@ from panel import Panel
 
 
 class Game(Panel):
+    """
+    The panel where the game is displayed.
+    """
     def __init__(self):
-        super().__init__((0, 0), GAME_WIDTH, HEIGHT, 'cadetblue2')
+        super().__init__((0, 0), (GAME_WIDTH, HEIGHT), pygame.display.get_surface(),(0, 0), 'cadetblue2')
 
         # Sprite groups
         self.visible_sprites = CameraGroup(self.surface)
@@ -19,6 +22,9 @@ class Game(Panel):
         self.create_map()
 
     def create_map(self):
+        """
+        Generates the map and loads textures according to layouts provided in CSV files.
+        """
         layouts = {
             'ground': import_csv_layout('map/ground.csv'),
             'wall': import_csv_layout('map/walls.csv'),
@@ -51,5 +57,5 @@ class Game(Panel):
     def run(self):
         self.surface.fill(self.fill_color)
         self.visible_sprites.draw(self.robot)
-        self.display.blit(self.surface, self.rect)
+        self.draw_surface.blit(self.surface, self.rect)
         self.visible_sprites.update()
