@@ -19,12 +19,16 @@ class DragAndDrop(Panel):
     def to_drag(self, blocks):
         for block in blocks:
             self.drop.blocks.remove(block)
-            self.drag.add_block(block.rect.topleft)
+            # check if the block was not moved to the game panel
+            """if block.abs_rect().x >= GAME_WIDTH:
+                self.drag.add_block(block.rect.topleft)"""
 
     def to_drop(self, blocks):
         for block in blocks:
             self.drag.blocks.remove(block)
-            self.drop.add_block(block.rect.topleft)
+            # check if the block was not moved to the game panel
+            if block.abs_rect().x >= GAME_WIDTH:
+                self.drop.add_block(block.rect.topleft)
 
     def run(self, event_list):
         # Draw the drag and drop panels
