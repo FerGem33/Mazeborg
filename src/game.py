@@ -1,10 +1,10 @@
 from settings import *
 from support import *
 from random import choice
-from robot import Robot
 from tile import Tile
 from camera import CameraGroup
 from panel import Panel
+from character import Character
 
 
 class Game(Panel):
@@ -15,11 +15,16 @@ class Game(Panel):
         super().__init__((0, 0), (GAME_WIDTH, HEIGHT), pygame.display.get_surface(),(0, 0), 'cadetblue2')
 
         # Sprite groups
-        self.visible_sprites = CameraGroup(self.surface)
-        self.collidable_sprites = pygame.sprite.Group()
+        self.visible = CameraGroup(self.surface)
+        self.collidable = pygame.sprite.Group()
 
         self.robot = None
+        self.character = None
+        self.script = None
         self.create_map()
+
+        # self.robot = Robot((100, 250), [self.visible_sprites], self.collidable_sprites)
+        self.character = Character((100, 200), [self.visible], self.collidable)
 
     def create_map(self):
         """
@@ -43,19 +48,14 @@ class Game(Panel):
                         x = column_index * TILESIZE
                         y = row_index * TILESIZE
 
-                        """if style == 'ground':
-                            surf = choice(graphs['ground'])
-                            Tile((x, y), [self.visible_sprites], 'ground', surf)"""
                         if style == 'wall':
-                            Tile((x, y), [self.visible_sprites, self.collidable_sprites], 'wall', graphs['wall'][0])
+                            Tile((x, y), [self.visible, self.collidable], 'wall', graphs['wall'][0])
                         if style == 'flower':
                             surf = choice(graphs['flower'])
-                            Tile((x, y), [self.visible_sprites], 'object', surf)
-
-        self.robot = Robot((100, 250), [self.visible_sprites], self.collidable_sprites)
+                            Tile((x, y), [self.visible], 'object', surf)
 
     def run(self):
         self.surface.fill(self.fill_color)
-        self.visible_sprites.draw(self.robot)
+        self.visible.draw(self.character)
         self.draw_surface.blit(self.surface, self.rect)
-        self.visible_sprites.update()
+        self.visible.update()

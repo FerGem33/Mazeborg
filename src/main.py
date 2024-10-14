@@ -15,7 +15,10 @@ class Main:
         self.clock = pygame.time.Clock()
         self.level = Level()
 
+        # Music
+        self.volume = 0
         pygame.mixer.music.load(BGM1)
+        pygame.mixer.music.set_volume(self.volume)
 
     def toggle_fullscreen(self):
         # Toggle fullscreen state
@@ -26,6 +29,13 @@ class Main:
         else:
             # Switch back to windowed mode with the original window size
             pygame.display.set_mode((WIDTH, HEIGHT))
+
+    def toggle_volume(self):
+        if self.volume == 0:
+            self.volume = 0.75
+        else:
+            self.volume = 0
+        pygame.mixer.music.set_volume(self.volume)
 
     def run(self):
         pygame.mixer.music.play(loops=int(1e6))
@@ -39,7 +49,8 @@ class Main:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_f:
                         self.toggle_fullscreen()
-
+                    if event.key == pygame.K_m:
+                        self.toggle_volume()
             self.level.run(event_list)
             pygame.display.update()
             self.clock.tick(FPS)

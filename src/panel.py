@@ -35,7 +35,17 @@ class Panel:
         rect.y += self.offset[1]
         return rect
 
+    def draw(self):
+        """
+        Draws the panel on its draw surface
+        """
+        self.surface.fill(self.fill_color)
+        self.draw_surface.blit(self.surface, self.rect)
+
     def run(self):
+        """
+        The method executed on each iteration of the main game loop.
+        """
         pass
 
 
@@ -95,8 +105,3 @@ class BlockPanel(Panel):
             if block.update(event_list):
                 blocks.append(block)
         return blocks
-
-    def draw(self):
-        self.surface.fill(self.fill_color)
-        self.draw_surface.blit(self.surface, self.rect)
-
