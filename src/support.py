@@ -34,3 +34,9 @@ def import_folder(path) -> list:
             image_surface = pygame.image.load(full_path).convert_alpha()
             surface_list.append(image_surface)
     return surface_list
+
+
+def load_icon(icon_path, size):
+    """Loads and scales an icon image."""
+    icon = pygame.image.load(f'assets/images/icons/{icon_path}').convert_alpha()
+    return pygame.transform.scale(icon, size)

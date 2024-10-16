@@ -1,12 +1,13 @@
 import pygame
 from settings import *
-from codeblock import CodeBlock
+from codeblock import CodeBlock, InputBlock
 
 
 class Panel:
     """
     This serves as an abstract class to panels, the different sections the game screen is split into.
     """
+
     def __init__(self, pos, size, draw_surface, offset=(0, 0), fill_color=(0, 0, 0)):
         """
         Parameters
@@ -53,7 +54,8 @@ class BlockPanel(Panel):
     """
     A panel that contains CodeBlocks and allows its manipulation.
     """
-    def __init__(self, pos, panel_type, draw_surface, offset):
+
+    def __init__(self, pos, panel_type, draw_surface, offset, character):
         """
         Parameters
         ----------
@@ -70,27 +72,33 @@ class BlockPanel(Panel):
 
         if panel_type == 'drag':
             width = DRAG_WIDTH
-            fill_color = 'snow4'
+            fill_color = 'slategray3'   # 'snow4'
             blocks_color = 'crimson'
         elif panel_type == 'drop':
             width = DROP_WIDTH
-            fill_color = 'slategray3'
+            fill_color = '#D3D3D3'  # 'slategray3'
             blocks_color = 'mediumslateblue'
 
         super().__init__(pos, (width, HEIGHT), draw_surface, offset, fill_color)
         self.blocks_color = blocks_color
-        self.blocks = pygame.sprite.Group()
+        self.blocks = []
+        self.character = character
 
-    def add_block(self, pos):
+    def add_block(self, pos, block_type):
         """
         Adds a block to the panel.
         Parameters
         ----------
         pos : tuple
         The relative position of the panel to its draw surface.
+        block_type : str
+        The type of the block.
         """
-        block = CodeBlock(pos, self, self.draw_surface, self.blocks_color)
-        self.blocks.add(block)
+        if block_type[-1] == 'x':
+            block = InputBlock(pos, self, self.draw_surface, block_type, self.character)
+        else:
+            block = CodeBlock(pos, self, self.draw_surface, block_type, self.character)
+        self.blocks.append(block)
 
     def update(self, event_list) -> list:
         """
@@ -102,6 +110,6 @@ class BlockPanel(Panel):
         """
         blocks = []
         for block in self.blocks:
-            if block.update(event_list):
+            if block.run(event_list):
                 blocks.append(block)
         return blocks

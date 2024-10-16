@@ -10,6 +10,7 @@ class DragAndDrop(Panel):
     """
     The panel that contains the blocks of code and manages the drag and drop interface.
     """
+
     def __init__(self, character):
         """
         Parameters
@@ -17,17 +18,21 @@ class DragAndDrop(Panel):
         character : Character
         The character that the blocks of code control.
         """
+        self.character = character
         pos = (GAME_WIDTH, 0)
         super().__init__(pos, (DRAG_WIDTH + DROP_WIDTH, HEIGHT), pygame.display.get_surface(), pos)
         pos = (DROP_WIDTH, 0)
-        self.drag = BlockPanel(pos, 'drag', self.surface, self.offset + pos)
+        self.drag = BlockPanel(pos, 'drag', self.surface, self.offset + pos, self.character)
         pos = (0, 0)
-        self.drop = BlockPanel(pos, 'drop', self.surface, self.offset + pos)
+        self.drop = BlockPanel(pos, 'drop', self.surface, self.offset + pos, self.character)
 
         # Drag and Drop panels
-        self.drag.add_block((DROP_WIDTH + 30, 30))
-        self.drop.add_block((30, 30))
-        self.character = character
+        for i in range(10):
+            if i % 2 == 0:
+                self.drag.add_block((DROP_WIDTH + 30, 15 + 70*i), 'movex')
+            else:
+                self.drag.add_block((DROP_WIDTH + 30, 15 + 70*i), 'rotatex')
+
         self.script = Script(self.character)
         script = [
             partial(self.character.move, 12),
@@ -56,7 +61,7 @@ class DragAndDrop(Panel):
             partial(self.character.rotate, -90),
             partial(self.character.move, 1),
         ]
-        self.script.set_script(script)
+        # self.script.set_script(script)
 
     def to_drag(self, blocks):
         """
@@ -69,8 +74,8 @@ class DragAndDrop(Panel):
         for block in blocks:
             self.drop.blocks.remove(block)
             # check if the block was not moved to the game panel
-            """if block.abs_rect().x >= GAME_WIDTH:
-                self.drag.add_block(block.rect.topleft)"""
+            if block.abs_rect().x >= GAME_WIDTH:
+                self.drag.add_block(block.rect.topleft, block.block_type)
 
     def to_drop(self, blocks):
         """
@@ -84,10 +89,18 @@ class DragAndDrop(Panel):
             self.drag.blocks.remove(block)
             # check if the block was not moved to the game panel
             if block.abs_rect().x >= GAME_WIDTH:
-                self.drop.add_block(block.rect.topleft)
+                self.drop.add_block(block.rect.topleft, block.block_type)
+
+    def update_script(self):
+        script = []
+        for block in sorted(self.drop.blocks, key=lambda spr: spr.rect.top):
+            block.update_command()
+            script.append(block.command)
+        self.script.set_script(script)
 
     def run(self, event_list):
         """
+        The method executed on each iteration of the main game loop.
         Parameters
         ----------
         event_list : list
@@ -114,5 +127,6 @@ class DragAndDrop(Panel):
         for event in event_list:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F5:
+                    self.update_script()
                     self.script.start()
         self.script.update()
