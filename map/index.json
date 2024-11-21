@@ -1,0 +1,34 @@
+{
+    "levels": [
+        {
+            "name": "Pradera",
+            "path": "map/pradera.tmx",
+            "spawn": {
+                "x": 5,
+                "y": 4
+            },
+            "bg_color": "cadetblue2",
+            "difficulty": 2
+        },
+        {
+            "name": "Calabozo",
+            "path": "map/calabozo.tmx",
+            "spawn": {
+                "x": 39,
+                "y": 5
+            },
+            "bg_color": "#433725",
+            "difficulty": 3
+        },
+        {
+            "name": "Ejemplo",
+            "path": "map/ejemplo.tmx",
+            "spawn": {
+                "x": 1,
+                "y": 1
+            },
+            "bg_color": "#FFFFFF",
+            "difficulty": 1
+        }
+    ]
+}

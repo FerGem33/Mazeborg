@@ -1,7 +1,7 @@
 import sys
 import pygame
 from settings import *
-from level import Level
+from game import Game
 
 
 class Main:
@@ -13,7 +13,7 @@ class Main:
         icon = pygame.image.load('assets/images/robot/down_idle/idle_down.png')
         pygame.display.set_icon(icon)
         self.clock = pygame.time.Clock()
-        self.level = Level()
+        self.level = Game()
 
         # Music
         self.volume = 0

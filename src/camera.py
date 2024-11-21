@@ -18,15 +18,9 @@ class CameraGroup(pygame.sprite.Group):
         self.half_height = self.draw_surface.get_size()[1] // 2
         self.offset = pygame.math.Vector2()
 
-        self.ground_surf = pygame.image.load('assets/images/ground.png').convert()
-        self.ground_rect = self.ground_surf.get_rect(topleft=(0, 0))
-
     def draw(self, robot):
         self.offset.x = robot.rect.centerx - self.half_width
         self.offset.y = robot.rect.centery - self.half_height
-
-        ground_pos = self.ground_rect.topleft - self.offset
-        self.draw_surface.blit(self.ground_surf, ground_pos)
 
         for sprite in sorted(self.sprites(), key=lambda spr: spr.rect.centery):
             new_pos = sprite.rect.topleft - self.offset

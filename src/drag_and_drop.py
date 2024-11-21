@@ -34,34 +34,6 @@ class DragAndDrop(Panel):
                 self.drag.add_block((DROP_WIDTH + 30, 15 + 70*i), 'rotatex')
 
         self.script = Script(self.character)
-        script = [
-            partial(self.character.move, 12),
-            partial(self.character.rotate, -90),
-            partial(self.character.move, 3),
-            partial(self.character.rotate, -90),
-            partial(self.character.move, 4),
-            partial(self.character.rotate, 90),
-            partial(self.character.move, 25),
-            partial(self.character.rotate, 90),
-            partial(self.character.move, 7),
-            partial(self.character.rotate, -90),
-            partial(self.character.move, 8),
-            partial(self.character.rotate, 90),
-            partial(self.character.move, 6),
-            partial(self.character.rotate, 90),
-            partial(self.character.move, 14),
-            partial(self.character.rotate, -90),
-            partial(self.character.move, 3),
-            partial(self.character.rotate, -90),
-            partial(self.character.move, 19),
-            partial(self.character.rotate, -90),
-            partial(self.character.move, 25),
-            partial(self.character.rotate, -90),
-            partial(self.character.move, 5),
-            partial(self.character.rotate, -90),
-            partial(self.character.move, 1),
-        ]
-        # self.script.set_script(script)
 
     def to_drag(self, blocks):
         """

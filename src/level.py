@@ -1,20 +1,75 @@
-from game import Game
-from drag_and_drop import DragAndDrop
+from settings import *
+from support import *
+import json
+from pytmx import load_pygame, TiledTileLayer
+from tile import Tile
+from camera import CameraGroup
+from panel import Panel
+from character import Character
 
 
-class Level:
+class Level(Panel):
+    """
+    The panel where the level is displayed.
+    """
     def __init__(self):
-        # Panels
-        self.game = Game()
-        self.dragdrop = DragAndDrop(self.game.character)
+        super().__init__((0, 0), (GAME_WIDTH, HEIGHT), pygame.display.get_surface(),(0, 0), '#FFFFFF')
 
-    def run(self, event_list):
+        # Sprite groups
+        self.ground = CameraGroup(self.surface)
+        self.visible = CameraGroup(self.surface)
+        self.collidable = pygame.sprite.Group()
+
+        self.character = None
+        self.script = None
+
+        self.load('Calabozo')
+
+    def create_map(self, path):
         """
-        The method executed on each iteration of the main game loop.
+        Loads the map using pytmx.
         Parameters
         ----------
-        event_list : list
-        The list of events received from the pygame display.
+        path : the path to the tmx file that contains the data of the map
         """
-        self.dragdrop.run(event_list)
-        self.game.run()
+        tmx_data = load_pygame(path)
+
+        for layer in tmx_data.visible_layers:
+            if isinstance(layer, TiledTileLayer):
+                for x, y, gid in layer:
+                    tile = tmx_data.get_tile_image_by_gid(gid)
+                    if tile:  # Ensure the tile exists
+                        tile = pygame.transform.scale(tile, (TILESIZE, TILESIZE))
+                        pos = (x * TILESIZE, y * TILESIZE)
+
+                        if layer.name == "ground":
+                            Tile(pos, [self.ground], 'ground', tile)
+                        elif layer.name == "walls":
+                            Tile(pos, [self.visible, self.collidable], 'wall', tile)
+                        elif layer.name == "items":
+                            Tile(pos, [self.visible, self.collidable], 'item1', tile)
+                        elif layer.name == "items2":
+                            Tile(pos, [self.visible], 'item2', tile)
+
+    def load(self, map_name: str):
+        with open('map/index.json', 'r') as file:
+            data = json.load(file)
+
+        map_data = None
+        for level in data['levels']:
+            if map_name == level['name']:
+                map_data = level
+
+        self.fill_color = map_data['bg_color']
+
+        spawn = (map_data['spawn']['x'] * TILESIZE, map_data['spawn']['y'] * TILESIZE)
+        self.character = Character(spawn, [self.visible], self.collidable)
+
+        self.create_map(map_data['path'])
+
+    def run(self):
+        self.surface.fill(self.fill_color)
+        self.ground.draw(self.character)
+        self.visible.draw(self.character)
+        self.draw_surface.blit(self.surface, self.rect)
+        self.visible.update()
