@@ -23,7 +23,7 @@ class Level(Panel):
         self.character = None
         self.script = None
 
-        self.load('Calabozo')
+        self.load('Pueblo')
 
     def create_map(self, path):
         """

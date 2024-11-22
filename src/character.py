@@ -24,7 +24,7 @@ class Character(pygame.sprite.Sprite):
 
         # movement
         self.direction = pygame.math.Vector2(0, 1)
-        self.velocity = 5
+        self.velocity = 4
         self.collidable_sprites = collidable_sprites
 
         # Animations

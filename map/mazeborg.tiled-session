@@ -3,11 +3,12 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "pueblo.tmx",
     "expandedProjectPaths": [
-        "tilesets",
-        "."
+        ".",
+        "tilesets"
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "TilesetFloor.tsx": {
             "scaleInDock": 1
@@ -16,11 +17,11 @@
             "scaleInDock": 1
         },
         "calabozo.tmx": {
-            "scale": 1.0054166666666666,
+            "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 539.5772896808952,
-                "y": 359.5524243680067
+                "x": 552,
+                "y": 501
             }
         },
         "calabozo.tmx#TilesetDungeon": {
@@ -48,11 +49,19 @@
             "scaleInDock": 1
         },
         "pradera.tmx": {
-            "scale": 0.25,
+            "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1482,
-                "y": 494
+                "x": 1442,
+                "y": 445
+            }
+        },
+        "pueblo.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 1066,
+                "y": 463
             }
         },
         "tilesets/Elements.tsx": {
@@ -80,7 +89,7 @@
             "scaleInEditor": 1
         },
         "tilesets/TilesetFloor.tsx": {
-            "scaleInDock": 1,
+            "scaleInDock": 1.5,
             "scaleInEditor": 1
         },
         "tilesets/TilesetFloorB.tsx": {
@@ -96,7 +105,7 @@
             "scaleInEditor": 1
         },
         "tilesets/TilesetHouse.tsx": {
-            "scaleInDock": 1,
+            "scaleInDock": 2,
             "scaleInEditor": 1
         },
         "tilesets/TilesetInterior.tsx": {
@@ -112,7 +121,7 @@
             "scaleInEditor": 1
         },
         "tilesets/TilesetNature.tsx": {
-            "scaleInDock": 1,
+            "scaleInDock": 1.5,
             "scaleInEditor": 1
         },
         "tilesets/TilesetRelief.tsx": {
@@ -138,24 +147,26 @@
     },
     "last.externalTilesetPath": "C:/Users/ferlr/OneDrive/Code/mazeborg/map/tilesets",
     "last.imagePath": "C:/Users/ferlr/OneDrive/Code/mazeborg/map/tilesets/tiles/Interior",
+    "map.height": 24,
+    "map.lastUsedFormat": "tmx",
     "map.tileHeight": 64,
     "map.tileWidth": 64,
+    "map.width": 32,
     "openFiles": [
+        "pueblo.tmx",
+        "tilesets/TilesetHouse.tsx",
+        "tilesets/TilesetNature.tsx",
+        "tilesets/TilesetFloor.tsx"
     ],
     "project": "mazeborg.tiled-project",
     "recentFiles": [
-        "pradera.tmx",
-        "calabozo.tmx",
-        "tilesets/TilesetWallSimple.tsx",
-        "tilesets/TilesetInteriorFloor.tsx",
-        "tilesets/TilesetInterior.tsx",
-        "tilesets/Elements.tsx",
-        "tilesets/TilesetWater.tsx",
-        "tilesets/TilesetVillageAbandoned.tsx",
-        "tilesets/TilesetReliefDetail.tsx",
         "tilesets/TilesetFloor.tsx",
-        "tilesets/TilesetRelief.tsx",
-        "tilesets/TilesetNature.tsx"
+        "tilesets/TilesetNature.tsx",
+        "tilesets/TilesetHouse.tsx",
+        "pueblo.tmx",
+        "tilesets/TilesetFloorB.tsx",
+        "pradera.tmx",
+        "calabozo.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
