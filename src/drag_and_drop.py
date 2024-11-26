@@ -78,6 +78,9 @@ class DragAndDrop(Panel):
         event_list : list
         The list of events received from the pygame display.
         """
+
+        restart = False
+
         # Draw the drag and drop panels
         self.drag.draw()
         self.drop.draw()
@@ -101,4 +104,6 @@ class DragAndDrop(Panel):
                 if event.key == pygame.K_F5:
                     self.update_script()
                     self.script.start()
+                    restart = True
         self.script.update()
+        return restart

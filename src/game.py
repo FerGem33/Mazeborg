@@ -5,8 +5,7 @@ from drag_and_drop import DragAndDrop
 class Game:
     def __init__(self):
         # Panels
-        self.game = Level()
-        self.dragdrop = DragAndDrop(self.game.character)
+        self.level = Level()
 
     def run(self, event_list):
         """
@@ -16,5 +15,5 @@ class Game:
         event_list : list
         The list of events received from the pygame display.
         """
-        self.dragdrop.run(event_list)
-        self.game.run()
+        self.level.run(event_list)
+

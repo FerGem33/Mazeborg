@@ -113,3 +113,4 @@ class BlockPanel(Panel):
             if block.run(event_list):
                 blocks.append(block)
         return blocks
+

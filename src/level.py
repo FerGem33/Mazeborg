@@ -7,6 +7,8 @@ from camera import CameraGroup
 from panel import Panel
 from character import Character
 
+from drag_and_drop import DragAndDrop
+
 
 class Level(Panel):
     """
@@ -23,7 +25,12 @@ class Level(Panel):
         self.character = None
         self.script = None
 
-        self.load('Pueblo')
+        self.load('Calabozo')
+        self.dragdrop = DragAndDrop(self.character)
+
+    def restart(self):
+        self.character.restart()
+        self.dragdrop.script.executed = False
 
     def create_map(self, path):
         """
@@ -67,9 +74,17 @@ class Level(Panel):
 
         self.create_map(map_data['path'])
 
-    def run(self):
+    def run(self, event_list):
         self.surface.fill(self.fill_color)
-        self.ground.draw(self.character)
-        self.visible.draw(self.character)
+        self.ground.draw(self.character, event_list)
+        self.visible.draw(self.character, event_list)
         self.draw_surface.blit(self.surface, self.rect)
+        # self.ground.update()
         self.visible.update()
+
+        if self.dragdrop.run(event_list):
+            self.restart()
+        if self.dragdrop.script.executing:
+            self.ground.centered_view = True
+            self.visible.centered_view = True
+

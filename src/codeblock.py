@@ -62,12 +62,7 @@ class CodeBlock:
     def update(self, event_list) -> bool:
         """
         Updates the block on mouse events and checks if it's moved out of its panel.
-        Parameters
-        ----------
-        event_list : list
-        The list of events received from the pygame display.
         """
-
         for event in event_list:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if self.abs_rect().collidepoint(event.pos):
@@ -92,6 +87,8 @@ class CodeBlock:
         The method executed on each iteration of the main game loop.
         Parameters
         ----------
+        event : pygame.event.Event
+        A single python event.
         event_list : list
         The list of events received from the pygame display.
         """
@@ -191,11 +188,12 @@ class InputBlock(CodeBlock):
 
         # Render and draw text
         text_surface = self.font.render(self.text, True, (0, 0, 0))
-        self.draw_surface.blit(text_surface, (rect.x + 10, rect.y))
+        text_rect = text_surface.get_rect(center=rect.center)
+        self.draw_surface.blit(text_surface, text_rect)
 
         # If the input is active, draw the blinking cursor at the end of the text
         if self.input_active and self.cursor_visible:
-            cursor_x = rect.x + text_surface.get_width() + 10  # Position after the text
+            cursor_x = text_rect.right
             pygame.draw.line(self.draw_surface, (0, 0, 0), (cursor_x, rect.y + 5), (cursor_x, rect.y + 35), 2)
 
     def abs_input_rect(self) -> pygame.Rect:
