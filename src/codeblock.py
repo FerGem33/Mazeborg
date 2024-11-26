@@ -62,12 +62,7 @@ class CodeBlock:
     def update(self, event_list) -> bool:
         """
         Updates the block on mouse events and checks if it's moved out of its panel.
-        Parameters
-        ----------
-        event_list : list
-        The list of events received from the pygame display.
         """
-
         for event in event_list:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if self.abs_rect().collidepoint(event.pos):
@@ -92,6 +87,8 @@ class CodeBlock:
         The method executed on each iteration of the main game loop.
         Parameters
         ----------
+        event : pygame.event.Event
+        A single python event.
         event_list : list
         The list of events received from the pygame display.
         """

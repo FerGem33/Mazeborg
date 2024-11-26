@@ -18,13 +18,14 @@ class Character(pygame.sprite.Sprite):
         The group containing the sprites that the character can collide with.
         """
         super().__init__(groups)
+        self.spawn = pos
         self.image = pygame.image.load('assets/images/robot/down_idle/idle_down.png').convert_alpha()
-        self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(topleft=self.spawn)
         self.hitbox = self.rect.inflate(0, -26)
 
         # movement
         self.direction = pygame.math.Vector2(0, 1)
-        self.velocity = 4
+        self.velocity = 6
         self.collidable_sprites = collidable_sprites
 
         # Animations
@@ -54,6 +55,19 @@ class Character(pygame.sprite.Sprite):
         for animation in self.animations:
             fullpath = path + animation
             self.animations[animation] = import_folder(fullpath)
+
+    def restart(self):
+        self.rect = self.image.get_rect(topleft=self.spawn)
+        self.hitbox = self.rect.inflate(0, -26)
+
+        self.direction = pygame.math.Vector2(0, 1)
+        self.state = 'down_idle'
+
+        self.executing_command = False
+        self.progress = 0
+        self.duration = 0
+
+        self.update()
 
     def update_state(self):
         """
