@@ -87,4 +87,3 @@ class Level(Panel):
         if self.dragdrop.script.executing:
             self.ground.centered_view = True
             self.visible.centered_view = True
-

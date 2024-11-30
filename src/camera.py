@@ -53,29 +53,27 @@ class CameraGroup(pygame.sprite.Group):
             self.toggle_camera()
 
         for event in event_list:
-            # Drag camera
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if event.pos[0] < GAME_WIDTH:
+            if pygame.mouse.get_pos()[0] < GAME_WIDTH:
+                # Drag camera
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     self.dragging = True
                     self.last_mouse_pos = event.pos
 
-            elif event.type == pygame.MOUSEMOTION and self.dragging:
-                if event.pos[0] < GAME_WIDTH:
+                elif event.type == pygame.MOUSEMOTION and self.dragging:
                     self.camera_offset[0] += (event.pos[0] - self.last_mouse_pos[0]) / self.zoom
                     self.camera_offset[1] += (event.pos[1] - self.last_mouse_pos[1]) / self.zoom
                     self.camera_offset *= self.camera_velocity
                     self.last_mouse_pos = event.pos
 
-            elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                if event.pos[0] < GAME_WIDTH:
+                elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                     if self.dragging:
                         self.camera_offset = pygame.math.Vector2()
                         self.dragging = False
 
-            # Zoom camera
-            elif event.type == pygame.MOUSEWHEEL:
-                self.target_zoom += event.y * 0.1
-                self.target_zoom = max(self.min_zoom, min(self.max_zoom, self.target_zoom))
+                # Zoom camera
+                elif event.type == pygame.MOUSEWHEEL:
+                    self.target_zoom += event.y * 0.1
+                    self.target_zoom = max(self.min_zoom, min(self.max_zoom, self.target_zoom))
 
     def apply_smooth_zoom(self):
         """

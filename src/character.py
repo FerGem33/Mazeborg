@@ -6,6 +6,7 @@ class Character(pygame.sprite.Sprite):
     """
     The character controlled by the player.
     """
+
     def __init__(self, pos, groups, collidable_sprites):
         """
         Parameters
@@ -49,8 +50,8 @@ class Character(pygame.sprite.Sprite):
         # Each key represents a state, and its value is a list of all sprites of that states.
         # Each list is intended to be iterated to produce the effect of motion in the animation.
         self.animations = {'up': [], 'down': [], 'left': [], 'right': [],
-                        'up_idle': [], 'down_idle': [], 'left_idle': [], 'right_idle': [],
-                        'up_attack': [], 'down_attack': [], 'left_attack': [], 'right_attack': []}
+                           'up_idle': [], 'down_idle': [], 'left_idle': [], 'right_idle': [],
+                           'up_attack': [], 'down_attack': [], 'left_attack': [], 'right_attack': []}
 
         for animation in self.animations:
             fullpath = path + animation
@@ -85,7 +86,7 @@ class Character(pygame.sprite.Sprite):
             # if the direction is negative in y
             elif self.direction.y < 0:
                 self.state = 'up'
-            # if the direction is negative in x
+            # if the direction is positive in x
             if self.direction.x > 0:
                 self.state = 'right'
             # if the direction is negative in x
@@ -116,22 +117,48 @@ class Character(pygame.sprite.Sprite):
     def collide(self, direction):
         """
         Check for collision between the character and its collidable sprites.
+        direction: str
+        The axis to check collisions in.
         """
-        if direction == 'x':
-            for sprite in self.collidable_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
+        for sprite in self.collidable_sprites:
+            if sprite.hitbox.colliderect(self.hitbox):
+                if direction == 'x':
                     if self.direction.x > 0:  # eastward
                         self.hitbox.right = sprite.hitbox.left
                     if self.direction.x < 0:  # westward
                         self.hitbox.left = sprite.hitbox.right
-
-        if direction == 'y':
-            for sprite in self.collidable_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
+                elif direction == 'y':
                     if self.direction.y > 0:  # southward
                         self.hitbox.bottom = sprite.hitbox.top
                     if self.direction.y < 0:  # northward
                         self.hitbox.top = sprite.hitbox.bottom
+                return True
+
+    def sensor(self, direction, distance: int = TILESIZE):
+        """
+        Check if the chracter is one tile away from an obstacle.
+        direction: str
+        The axis to check collisions in.
+        distance: int
+        The distance in px to check for obstacles.
+        """
+        hitbox = self.hitbox
+        hitbox.x += self.direction[0] * distance
+        hitbox.y += self.direction[1] * distance
+
+        for sprite in self.collidable_sprites:
+            if sprite.hitbox.colliderect(hitbox):
+                if direction == 'x':
+                    if self.direction.x > 0:  # eastward
+                        self.hitbox.right = sprite.hitbox.left - distance
+                    if self.direction.x < 0:  # westward
+                        self.hitbox.left = sprite.hitbox.right - distance
+                elif direction == 'y':
+                    if self.direction.y > 0:  # southward
+                        self.hitbox.bottom = sprite.hitbox.top - distance
+                    if self.direction.y < 0:  # northward
+                        self.hitbox.top = sprite.hitbox.bottom - distance
+                return True
 
     def forward(self):
         """
@@ -140,11 +167,14 @@ class Character(pygame.sprite.Sprite):
         # Normalize the direction vector so that the velocity is always the same
         if self.direction.magnitude() != 0:
             self.direction.normalize_ip()
+
         # Move the character's hitbox and check for collisions
+
         self.hitbox.x += self.direction.x * self.velocity
-        self.collide('x')
+        collided = self.collide('x')
         self.hitbox.y += self.direction.y * self.velocity
-        self.collide('y')
+        collided = collided or self.collide('y')
+        return collided
 
     def move(self, tiles):
         """
@@ -175,4 +205,8 @@ class Character(pygame.sprite.Sprite):
         return True
 
     def smart_move(self):
-        pass
+        self.progress = 1
+        if self.forward():
+            self.progress = 0
+            return True
+        return False

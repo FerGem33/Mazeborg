@@ -36,8 +36,12 @@ class CodeBlock:
             # key: [fill_color, icon, function]
             'start': ['#389C9A', 'start.png', None],
             'finish': ['#F23C4D', 'finish.png', None],
-            'movex': ['#52489C', 'movex.png', self.character.move],
+            'movex': ['#52489C', 'forward.png', self.character.move],
             'rotatex': ['#4062BB', 'rotatex.png', self.character.rotate],
+            'turn_right': ['#4062BB', 'turn_right.png', self.character.rotate, 90],
+            'turn_left': ['#4062BB', 'turn_left.png', self.character.rotate, -90],
+            'turn_back': ['#4062BB', 'turn_back.png', self.character.rotate, 180],
+            'smart_move': ['#52489C', 'smart_move.png', self.character.smart_move],
         }
 
         self.fill_color = types[block_type][0]
@@ -53,6 +57,12 @@ class CodeBlock:
         # Command to be executed by the block
         self.args = []
         self.command = None
+
+        try:
+            self.args = types[block_type][3]
+            self.command = partial(self.function, self.args)
+        except IndexError:
+            self.command = partial(self.function)
 
     def draw(self):
         """Draws the block on its draw surface, including the icon and input box if applicable."""
@@ -100,23 +110,6 @@ class CodeBlock:
         rect.x += self.panel.offset[0]
         rect.y += self.panel.offset[1]
         return rect
-
-    def update_args(self, args):
-        """
-        Sets the arguments for the block's command and updates it.
-        Parameters
-        ----------
-        args : str
-        The string that contains the arg to be updated.
-        """
-        try:
-            args = int(args)
-        except ValueError:
-            try:
-                args = float(args)
-            except ValueError:
-                pass
-        self.args = args
 
     def draw_icon(self):
         """Draws the icon at the appropriate position."""

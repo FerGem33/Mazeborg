@@ -4,6 +4,7 @@ from functools import partial
 from panel import Panel, BlockPanel
 from character import Character
 from script import Script
+from codeblock import InputBlock
 
 
 class DragAndDrop(Panel):
@@ -27,11 +28,22 @@ class DragAndDrop(Panel):
         self.drop = BlockPanel(pos, 'drop', self.surface, self.offset + pos, self.character)
 
         # Drag and Drop panels
-        for i in range(10):
+        """for i in range(10):
             if i % 2 == 0:
                 self.drag.add_block((DROP_WIDTH + 30, 15 + 70*i), 'movex')
             else:
-                self.drag.add_block((DROP_WIDTH + 30, 15 + 70*i), 'rotatex')
+                self.drag.add_block((DROP_WIDTH + 30, 15 + 70*i), 'rotatex')"""
+
+        self.drag.add_block((DROP_WIDTH + 30, 15), 'movex')
+        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 1), 'rotatex')
+        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 2), 'movex')
+        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 3), 'rotatex')
+        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 4), 'smart_move')
+        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 5), 'turn_right')
+        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 6), 'smart_move')
+        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 7), 'turn_left')
+        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 8), 'smart_move')
+        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 9), 'turn_back')
 
         self.script = Script(self.character)
 
@@ -64,10 +76,12 @@ class DragAndDrop(Panel):
                 self.drop.add_block(block.rect.topleft, block.block_type)
 
     def update_script(self):
-        script = []
+        script = [partial(self.character.rotate, 0)]
         for block in sorted(self.drop.blocks, key=lambda spr: spr.rect.top):
-            block.update_command()
+            if isinstance(block, InputBlock):
+                block.update_command()
             script.append(block.command)
+        script.append(partial(self.character.move, 0))
         self.script.set_script(script)
 
     def run(self, event_list):
