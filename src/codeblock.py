@@ -188,11 +188,12 @@ class InputBlock(CodeBlock):
 
         # Render and draw text
         text_surface = self.font.render(self.text, True, (0, 0, 0))
-        self.draw_surface.blit(text_surface, (rect.x + 10, rect.y))
+        text_rect = text_surface.get_rect(center=rect.center)
+        self.draw_surface.blit(text_surface, text_rect)
 
         # If the input is active, draw the blinking cursor at the end of the text
         if self.input_active and self.cursor_visible:
-            cursor_x = rect.x + text_surface.get_width() + 10  # Position after the text
+            cursor_x = text_rect.right
             pygame.draw.line(self.draw_surface, (0, 0, 0), (cursor_x, rect.y + 5), (cursor_x, rect.y + 35), 2)
 
     def abs_input_rect(self) -> pygame.Rect:
