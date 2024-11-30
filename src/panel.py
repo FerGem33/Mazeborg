@@ -8,7 +8,7 @@ class Panel:
     This serves as an abstract class to panels, the different sections the game screen is split into.
     """
 
-    def __init__(self, pos, size, draw_surface, offset=(0, 0), fill_color=(0, 0, 0)):
+    def __init__(self, pos, size, draw_surface, sounds, offset=(0, 0), fill_color=(0, 0, 0)):
         """
         Parameters
         ----------
@@ -18,6 +18,8 @@ class Panel:
         The width and height of the panel in pixels.
         draw_surface : pygame.Surface
         The surface to draw the panel on.
+        sounds: dict
+        The dictionary of sounds.
         offset : tuple
         The distance in x and y from (0,0) of pygame's display.
         fill_color : pygame.color | str
@@ -26,6 +28,7 @@ class Panel:
         self.draw_surface = draw_surface
         self.surface = pygame.surface.Surface(size)
         self.rect = self.surface.get_rect(topleft=pos)
+        self.sounds = sounds
         self.offset = offset
         self.fill_color = fill_color
 
@@ -55,7 +58,7 @@ class BlockPanel(Panel):
     A panel that contains CodeBlocks and allows its manipulation.
     """
 
-    def __init__(self, pos, panel_type, draw_surface, offset, character):
+    def __init__(self, pos, panel_type, draw_surface, sounds, offset, character):
         """
         Parameters
         ----------
@@ -65,6 +68,8 @@ class BlockPanel(Panel):
         The type of panel to create. Possible values: 'drag', 'drop'.
         draw_surface : pygame.Surface
         The surface to draw the panel on.
+        sounds: dict
+        The dictionary of sounds.
         """
         width = None
         fill_color = None
@@ -79,7 +84,7 @@ class BlockPanel(Panel):
             fill_color = '#D3D3D3'  # 'slategray3'
             blocks_color = 'mediumslateblue'
 
-        super().__init__(pos, (width, HEIGHT), draw_surface, offset, fill_color)
+        super().__init__(pos, (width, HEIGHT), draw_surface, sounds, offset, fill_color)
         self.blocks_color = blocks_color
         self.blocks = []
         self.character = character
@@ -95,9 +100,9 @@ class BlockPanel(Panel):
         The type of the block.
         """
         if block_type[-1] == 'x':
-            block = InputBlock(pos, self, self.draw_surface, block_type, self.character)
+            block = InputBlock(pos, self, self.draw_surface, block_type, self.character, self.sounds)
         else:
-            block = CodeBlock(pos, self, self.draw_surface, block_type, self.character)
+            block = CodeBlock(pos, self, self.draw_surface, block_type, self.character, self.sounds)
         self.blocks.append(block)
 
     def update(self, event_list) -> list:

@@ -14,8 +14,9 @@ class Level(Panel):
     """
     The panel where the level is displayed.
     """
-    def __init__(self):
-        super().__init__((0, 0), (GAME_WIDTH, HEIGHT), pygame.display.get_surface(),(0, 0), '#FFFFFF')
+    def __init__(self, sounds):
+        super().__init__((0, 0), (GAME_WIDTH, HEIGHT), pygame.display.get_surface(), sounds, (0, 0), '#FFFFFF')
+        self.sounds = sounds
 
         # Sprite groups
         self.ground = CameraGroup(self.surface)
@@ -26,7 +27,7 @@ class Level(Panel):
         self.script = None
 
         self.load('Calabozo')
-        self.dragdrop = DragAndDrop(self.character)
+        self.dragdrop = DragAndDrop(self.character, sounds)
 
     def restart(self):
         self.character.restart()

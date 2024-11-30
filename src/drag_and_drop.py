@@ -12,7 +12,7 @@ class DragAndDrop(Panel):
     The panel that contains the blocks of code and manages the drag and drop interface.
     """
 
-    def __init__(self, character):
+    def __init__(self, character, sounds):
         """
         Parameters
         ----------
@@ -21,11 +21,11 @@ class DragAndDrop(Panel):
         """
         self.character = character
         pos = (GAME_WIDTH, 0)
-        super().__init__(pos, (DRAG_WIDTH + DROP_WIDTH, HEIGHT), pygame.display.get_surface(), pos)
+        super().__init__(pos, (DRAG_WIDTH + DROP_WIDTH, HEIGHT), pygame.display.get_surface(), sounds, pos)
         pos = (DROP_WIDTH, 0)
-        self.drag = BlockPanel(pos, 'drag', self.surface, self.offset + pos, self.character)
+        self.drag = BlockPanel(pos, 'drag', self.surface, sounds, self.offset + pos, self.character)
         pos = (0, 0)
-        self.drop = BlockPanel(pos, 'drop', self.surface, self.offset + pos, self.character)
+        self.drop = BlockPanel(pos, 'drop', self.surface, sounds, self.offset + pos, self.character)
 
         # Drag and Drop panels
         """for i in range(10):

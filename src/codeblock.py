@@ -10,7 +10,7 @@ class CodeBlock:
     A block of code that controls the character's behavior.
     """
 
-    def __init__(self, pos, panel, draw_surface, block_type, character):
+    def __init__(self, pos, panel, draw_surface, block_type, character, sounds):
         """
         Parameters
         ----------
@@ -30,6 +30,7 @@ class CodeBlock:
         self.draw_surface = draw_surface
         self.block_type = block_type
         self.character = character
+        self.sounds = sounds
 
         # Block types and their properties
         types = {
@@ -80,6 +81,7 @@ class CodeBlock:
                     self.moved = False
                     self.offset_x = self.rect.x - event.pos[0]
                     self.offset_y = self.rect.y - event.pos[1]
+                    # self.sounds['grab'].play()
 
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if self.dragging:
@@ -122,7 +124,7 @@ class InputBlock(CodeBlock):
     A block of code that allows user text-input.
     """
 
-    def __init__(self, pos, panel, draw_surface, block_type, character):
+    def __init__(self, pos, panel, draw_surface, block_type, character, sounds):
         """
         Parameters
         ----------
@@ -135,7 +137,7 @@ class InputBlock(CodeBlock):
         block_type : str
             The type of the block (e.g., 'start', 'finish', etc.).
         """
-        super().__init__(pos, panel, draw_surface, block_type, character)
+        super().__init__(pos, panel, draw_surface, block_type, character, sounds)
 
         # Input text and box for blocks that have input (e.g., 'movex', 'rotatex')
         self.text = ''
@@ -201,6 +203,8 @@ class InputBlock(CodeBlock):
         """Sets the command for the block based on its type."""
         if self.text:
             self.update_args(self.text)
+        else:
+            self.update_args(0)
         if self.function:
             self.command = partial(self.function, self.args)
 
@@ -234,4 +238,8 @@ class InputBlock(CodeBlock):
                 if event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]  # Remove last character
                 else:
-                    self.text += event.unicode  # Add new character
+                    char = event.unicode
+                    if char.isnumeric() or char == '-':
+                        self.text += char  # Add new character
+                    else:
+                        self.sounds['cant'].play()

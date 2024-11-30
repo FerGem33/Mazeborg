@@ -1,11 +1,15 @@
 from level import Level
-from drag_and_drop import DragAndDrop
+import pygame
 
 
 class Game:
     def __init__(self):
         # Panels
-        self.level = Level()
+        self.sounds = {
+            'cant': pygame.mixer.Sound('assets/sounds/cant.ogg'),
+            'grab': pygame.mixer.Sound('assets/sounds/grab.wav'),
+        }
+        self.level = Level(self.sounds)
 
     def run(self, event_list):
         """
