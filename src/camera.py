@@ -35,7 +35,7 @@ class CameraGroup(pygame.sprite.Group):
         self.target_zoom = 1.00
         self.zoom_speed = 0.1
         self.min_zoom = 0.25
-        self.max_zoom = 1.50
+        self.max_zoom = 1.0
 
     def toggle_camera(self):
         self.centered_view = True

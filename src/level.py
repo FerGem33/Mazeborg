@@ -6,7 +6,6 @@ from tile import Tile
 from camera import CameraGroup
 from panel import Panel
 from character import Character
-
 from drag_and_drop import DragAndDrop
 
 
@@ -14,9 +13,8 @@ class Level(Panel):
     """
     The panel where the level is displayed.
     """
-    def __init__(self, sounds):
-        super().__init__((0, 0), (GAME_WIDTH, HEIGHT), pygame.display.get_surface(), sounds, (0, 0), '#FFFFFF')
-        self.sounds = sounds
+    def __init__(self, level_name):
+        super().__init__((0, 0), (GAME_WIDTH, HEIGHT), pygame.display.get_surface(), (0, 0), '#FFFFFF')
 
         # Sprite groups
         self.ground = CameraGroup(self.surface)
@@ -26,8 +24,10 @@ class Level(Panel):
         self.character = None
         self.script = None
 
-        self.load('Calabozo')
-        self.dragdrop = DragAndDrop(self.character, sounds)
+        self.dragdrop = None
+        self.load(level_name)
+
+        self.always_follow = True
 
     def restart(self):
         self.character.restart()
@@ -72,8 +72,10 @@ class Level(Panel):
 
         spawn = (map_data['spawn']['x'] * TILESIZE, map_data['spawn']['y'] * TILESIZE)
         self.character = Character(spawn, [self.visible], self.collidable)
+        self.dragdrop = DragAndDrop(self.character)
 
         self.create_map(map_data['path'])
+        file.close()
 
     def run(self, event_list):
         self.surface.fill(self.fill_color)
@@ -86,5 +88,5 @@ class Level(Panel):
         if self.dragdrop.run(event_list):
             self.restart()
         if self.dragdrop.script.executing:
-            self.ground.centered_view = True
-            self.visible.centered_view = True
+            self.ground.centered_view = self.always_follow
+            self.visible.centered_view = self.always_follow

@@ -1,5 +1,6 @@
 import pygame
 from functools import partial
+from settings import SFX, CHANNELS
 from time import time
 from support import load_icon
 from character import Character
@@ -10,7 +11,7 @@ class CodeBlock:
     A block of code that controls the character's behavior.
     """
 
-    def __init__(self, pos, panel, draw_surface, block_type, character, sounds):
+    def __init__(self, pos, panel, draw_surface, block_type, character):
         """
         Parameters
         ----------
@@ -30,7 +31,6 @@ class CodeBlock:
         self.draw_surface = draw_surface
         self.block_type = block_type
         self.character = character
-        self.sounds = sounds
 
         # Block types and their properties
         types = {
@@ -99,8 +99,6 @@ class CodeBlock:
         The method executed on each iteration of the main game loop.
         Parameters
         ----------
-        event : pygame.event.Event
-        A single python event.
         event_list : list
         The list of events received from the pygame display.
         """
@@ -124,7 +122,7 @@ class InputBlock(CodeBlock):
     A block of code that allows user text-input.
     """
 
-    def __init__(self, pos, panel, draw_surface, block_type, character, sounds):
+    def __init__(self, pos, panel, draw_surface, block_type, character):
         """
         Parameters
         ----------
@@ -137,7 +135,7 @@ class InputBlock(CodeBlock):
         block_type : str
             The type of the block (e.g., 'start', 'finish', etc.).
         """
-        super().__init__(pos, panel, draw_surface, block_type, character, sounds)
+        super().__init__(pos, panel, draw_surface, block_type, character)
 
         # Input text and box for blocks that have input (e.g., 'movex', 'rotatex')
         self.text = ''
@@ -242,4 +240,4 @@ class InputBlock(CodeBlock):
                     if char.isnumeric() or char == '-':
                         self.text += char  # Add new character
                     else:
-                        self.sounds['cant'].play()
+                        CHANNELS['sfx'].play(SFX['cant'])
