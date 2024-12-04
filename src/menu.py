@@ -77,33 +77,34 @@ class SettingsMenu(Menu):
                 toggle_display = self.font.render(toggle_text, True, toggle_color)
                 self.display.blit(toggle_display, (700, 100 + 60 * i))
 
-    def update(self, event_list):
-        for event in event_list:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    self.selected_index = (self.selected_index - 1) % len(self.options)
-                    CHANNELS['sfx'].play(SFX['menu1'])
-                elif event.key == pygame.K_DOWN:
-                    self.selected_index = (self.selected_index + 1) % len(self.options)
-                    CHANNELS['sfx'].play(SFX['menu1'])
-                elif event.key == pygame.K_RIGHT:
-                    self.adjust_setting(1)
-                elif event.key == pygame.K_LEFT:
-                    self.adjust_setting(-1)
-                elif event.key == pygame.K_RETURN:
-                    if self.settings[self.options[self.selected_index]] is not None:
-                        self.adjust_setting(0)
-                    else:
-                        SFX['accept'].play()
-                        """if self.options[-1] == self.options[self.selected_index]:
-                            return self.settings
-                        return self.options[self.selected_index]"""
-                        return [self.settings, self.options[self.selected_index]]
+    def update(self, event_list, menu_active):
+        if menu_active:
+            for event in event_list:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.selected_index = (self.selected_index - 1) % len(self.options)
+                        CHANNELS['sfx'].play(SFX['menu1'])
+                    elif event.key == pygame.K_DOWN:
+                        self.selected_index = (self.selected_index + 1) % len(self.options)
+                        CHANNELS['sfx'].play(SFX['menu1'])
+                    elif event.key == pygame.K_RIGHT:
+                        self.adjust_setting(1)
+                    elif event.key == pygame.K_LEFT:
+                        self.adjust_setting(-1)
+                    elif event.key == pygame.K_RETURN:
+                        if self.settings[self.options[self.selected_index]] is not None:
+                            self.adjust_setting(0)
+                        else:
+                            SFX['accept'].play()
+                            """if self.options[-1] == self.options[self.selected_index]:
+                                return self.settings
+                            return self.options[self.selected_index]"""
+                            return [self.settings, self.options[self.selected_index]]
         return [self.settings, None]
 
-    def run(self, event_list):
+    def run(self, event_list, menu_active=True):
         self.draw()
-        return self.update(event_list)
+        return self.update(event_list, menu_active)
 
     def adjust_setting(self, direction):
         """

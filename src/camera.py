@@ -25,7 +25,7 @@ class CameraGroup(pygame.sprite.Group):
         self.camera_offset = pygame.math.Vector2()
         self.camera_velocity = 0.5
 
-        self.centered_view = True
+        self.follow_character = True
 
         self.last_camera_toggle = 0
         self.toggle_delay = 300
@@ -34,11 +34,11 @@ class CameraGroup(pygame.sprite.Group):
         self.zoom = 1.00
         self.target_zoom = 1.00
         self.zoom_speed = 0.1
-        self.min_zoom = 0.25
+        self.min_zoom = 0.5
         self.max_zoom = 1.0
 
     def toggle_camera(self):
-        self.centered_view = True
+        self.follow_character = True
 
     def handle_input(self, event_list):
         """
@@ -72,7 +72,7 @@ class CameraGroup(pygame.sprite.Group):
 
                 # Zoom camera
                 elif event.type == pygame.MOUSEWHEEL:
-                    self.target_zoom += event.y * 0.1
+                    self.target_zoom += event.y * 0.05
                     self.target_zoom = max(self.min_zoom, min(self.max_zoom, self.target_zoom))
 
     def apply_smooth_zoom(self):
@@ -107,12 +107,12 @@ class CameraGroup(pygame.sprite.Group):
         """
         self.apply_smooth_zoom()
 
-        if self.centered_view:
+        if self.follow_character:
             self.return_to_center(robot, smooth=True)
             # Stop centering once close enough to the target
             if abs(self.offset.x - (robot.rect.centerx - self.half_width)) < 1 and \
                abs(self.offset.y - (robot.rect.centery - self.half_height)) < 1:
-                self.centered_view = False
+                self.follow_character = False
         else:
             self.offset -= self.camera_offset
 

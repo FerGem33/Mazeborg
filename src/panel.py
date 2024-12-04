@@ -113,3 +113,13 @@ class BlockPanel(Panel):
             if block.run(event_list):
                 blocks.append(block)
         return blocks
+
+    def update2(self, event_list):
+        blocks = []
+        for event in event_list:
+            for block in self.blocks:
+                if block.run2(event):
+                    blocks.append(block)
+                if block.abs_rect().collidepoint(pygame.mouse.get_pos()):
+                    break
+        return blocks

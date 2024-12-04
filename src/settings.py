@@ -50,3 +50,7 @@ SFX = {
     'save': pygame.mixer.Sound('assets/sounds/save.ogg'),
     'adjust': pygame.mixer.Sound('assets/sounds/adjust.ogg'),
 }
+
+# Default values
+DESTROY = True
+CAMERA_FOLLOW = False

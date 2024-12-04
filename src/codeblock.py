@@ -1,6 +1,6 @@
 import pygame
 from functools import partial
-from settings import SFX, CHANNELS
+from settings import *
 from time import time
 from support import load_icon
 from character import Character
@@ -93,6 +93,31 @@ class CodeBlock:
                 self.moved = True
                 self.rect.x = event.pos[0] + self.offset_x
                 self.rect.y = event.pos[1] + self.offset_y
+        return False
+
+    def update2(self, event) -> bool:
+        """
+        Updates the block on mouse events and checks if it's moved out of its panel.
+        """
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.abs_rect().collidepoint(event.pos):
+                self.dragging = True
+                self.moved = False
+                self.offset_x = self.rect.x - event.pos[0]
+                self.offset_y = self.rect.y - event.pos[1]
+                # self.sounds['grab'].play()
+
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            if self.dragging:
+                self.dragging = False
+                return self.moved and not self.abs_rect().colliderect(self.panel.abs_rect())
+
+        elif event.type == pygame.MOUSEMOTION and self.dragging:
+            # Update block position while dragging
+            self.moved = True
+            self.rect.x = event.pos[0] + self.offset_x
+            self.rect.y = event.pos[1] + self.offset_y
+        return False
 
     def run(self, event_list):
         """
@@ -103,6 +128,15 @@ class CodeBlock:
         The list of events received from the pygame display.
         """
         return self.update(event_list)
+
+    def run2(self, event):
+        """
+        The method executed on each iteration of the main game loop.
+        Parameters
+        ----------
+        event: pygame.event.Event
+        """
+        return self.update2(event)
 
     def abs_rect(self) -> pygame.Rect:
         """Returns the absolute position of the block with respect to the pygame display."""
@@ -153,6 +187,18 @@ class InputBlock(CodeBlock):
         self.draw_icon()
         self.draw_input_box()
 
+    def update(self, event_list):
+        moved = super().update(event_list)
+        self.input_rect.x = self.rect.right - 100
+        self.input_rect.y = self.rect.top + 10
+        return moved
+
+    def update2(self, event):
+        moved = super().update2(event)
+        self.input_rect.x = self.rect.right - 100
+        self.input_rect.y = self.rect.top + 10
+        return moved
+
     def run(self, event_list) -> bool:
         """
         Runs the block.
@@ -167,6 +213,19 @@ class InputBlock(CodeBlock):
             self.cursor_time = time()
         return self.update(event_list)
 
+    def run2(self, event) -> bool:
+        """
+        Runs the block.
+        Parameters
+        ----------
+        event: pygame.event.Event
+        """
+        self.handle_input2(event)
+        if time() - self.cursor_time > 0.5:  # Change every half second
+            self.cursor_visible = not self.cursor_visible
+            self.cursor_time = time()
+        return self.update2(event)
+
     def draw_icon(self):
         """Draws the icon at the appropriate position."""
         icon_rect = self.icon.get_rect(topleft=(self.rect.x + 10, self.rect.y + 10))
@@ -176,18 +235,18 @@ class InputBlock(CodeBlock):
         """Draws the input box."""
 
         # Draw input box
-        rect = pygame.Rect(self.rect.right - 100, self.rect.top + 10, 80, 40)
-        pygame.draw.rect(self.draw_surface, (200, 200, 200), rect)
+        # rect = pygame.Rect(self.rect.right - 100, self.rect.top + 10, 80, 40)
+        pygame.draw.rect(self.draw_surface, (200, 200, 200), self.input_rect)
 
         # Render and draw text
         text_surface = self.font.render(self.text, True, (0, 0, 0))
-        text_rect = text_surface.get_rect(center=rect.center)
+        text_rect = text_surface.get_rect(center=self.input_rect.center)
         self.draw_surface.blit(text_surface, text_rect)
 
         # If the input is active, draw the blinking cursor at the end of the text
         if self.input_active and self.cursor_visible:
             cursor_x = text_rect.right
-            pygame.draw.line(self.draw_surface, (0, 0, 0), (cursor_x, rect.y + 5), (cursor_x, rect.y + 35), 2)
+            pygame.draw.line(self.draw_surface, (0, 0, 0), (cursor_x, self.input_rect.y + 5), (cursor_x, self.input_rect.y + 35), 2)
 
     def abs_input_rect(self) -> pygame.Rect:
         """Returns the absolute position of the input rect."""
@@ -241,3 +300,26 @@ class InputBlock(CodeBlock):
                         self.text += char  # Add new character
                     else:
                         CHANNELS['sfx'].play(SFX['cant'])
+
+    def handle_input2(self, event):
+        """
+        Handles user input for the input box.
+        Parameters
+        ----------
+        event: pygame.event.Event
+        """
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.input_rect and self.abs_input_rect().collidepoint(event.pos):
+                self.input_active = True
+            else:
+                self.input_active = False
+
+        if event.type == pygame.KEYDOWN and self.input_active:
+            if event.key == pygame.K_BACKSPACE:
+                self.text = self.text[:-1]  # Remove last character
+            else:
+                char = event.unicode
+                if char.isnumeric() or char == '-':
+                    self.text += char  # Add new character
+                else:
+                    CHANNELS['sfx'].play(SFX['cant'])

@@ -27,26 +27,13 @@ class DragAndDrop(Panel):
         self.drop = BlockPanel(pos, 'drop', self.surface, self.offset + pos, self.character)
 
         # Drag and Drop panels
-        """for i in range(10):
-            if i % 2 == 0:
-                self.drag.add_block((DROP_WIDTH + 30, 15 + 70*i), 'movex')
-            else:
-                self.drag.add_block((DROP_WIDTH + 30, 15 + 70*i), 'rotatex')"""
-
-        self.drag.add_block((DROP_WIDTH + 30, 15), 'movex')
-        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 1), 'rotatex')
-        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 2), 'movex')
-        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 3), 'rotatex')
-        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 4), 'smart_move')
-        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 5), 'turn_right')
-        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 6), 'smart_move')
-        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 7), 'turn_left')
-        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 8), 'smart_move')
-        self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * 9), 'turn_back')
-
+        types = ['movex', 'rotatex', 'smart_move', 'turn_right', 'turn_left', 'turn_back']
+        for i, t in enumerate(types):
+            for x in range(20):
+                self.drag.add_block((DROP_WIDTH + 30, 15 + 70 * i), t)
         self.script = Script(self.character)
 
-    def to_drag(self, blocks):
+    def to_drag(self, blocks, destroy=False):
         """
         Adds the given blocks to the Drag panel.
         Parameters
@@ -54,11 +41,15 @@ class DragAndDrop(Panel):
         blocks : list
         The blocks to add to the Drag panel.
         """
-        for block in blocks:
-            self.drop.blocks.remove(block)
-            # check if the block was not moved to the game panel
-            if block.abs_rect().x >= GAME_WIDTH:
-                self.drag.add_block(block.rect.topleft, block.block_type)
+        if not destroy:
+            for block in blocks:
+                self.drop.blocks.remove(block)
+                # check if the block was not moved to the game panel
+                if block.abs_rect().x >= GAME_WIDTH:
+                    self.drag.add_block(block.rect.topleft, block.block_type)
+        else:
+            for block in blocks:
+                self.drop.blocks.remove(block)
 
     def to_drop(self, blocks):
         """
@@ -99,9 +90,9 @@ class DragAndDrop(Panel):
         self.drop.draw()
 
         # Update the blocks
-        from_drag = self.drag.update(event_list)
-        from_drop = self.drop.update(event_list)
-        self.to_drag(from_drop)
+        from_drag = self.drag.update2(event_list)
+        from_drop = self.drop.update2(event_list)
+        self.to_drag(from_drop, DESTROY)
         self.to_drop(from_drag)
 
         # Draw the blocks onto the panel

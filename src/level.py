@@ -88,5 +88,5 @@ class Level(Panel):
         if self.dragdrop.run(event_list):
             self.restart()
         if self.dragdrop.script.executing:
-            self.ground.centered_view = self.always_follow
-            self.visible.centered_view = self.always_follow
+            self.ground.follow_character = self.always_follow
+            self.visible.follow_character = self.always_follow

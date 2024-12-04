@@ -42,11 +42,12 @@ class Main:
         self.game = None
 
     def handle_menu(self, option):
+        if option[0]:
+            CHANNELS['bgm'].set_volume(option[0]['Volumen de Musica'])
+            CHANNELS['sfx'].set_volume(option[0]['Volumen de Efectos de Sonido'])
         if option[1]:
             if option[1] == 'Volver a inicio':
                 self.state = 'main_menu'
-        CHANNELS['bgm'].set_volume(option[0]['Volumen de Musica'])
-        CHANNELS['sfx'].set_volume(option[0]['Volumen de Efectos de Sonido'])
 
     def run(self):
         CHANNELS['bgm'].play(-1)
