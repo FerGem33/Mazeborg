@@ -5,17 +5,17 @@
     },
     "activeFile": "Castillo.tmx",
     "expandedProjectPaths": [
-        ".",
-        "tilesets"
+        "tilesets",
+        "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "Castillo.tmx": {
-            "scale": 0.5,
-            "selectedLayer": 2,
+            "scale": 0.75,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 390,
-                "y": 545
+                "x": 586.6666666666666,
+                "y": 570
             }
         },
         "TilesetFloor.tsx": {
@@ -113,7 +113,7 @@
             "scaleInEditor": 1
         },
         "tilesets/TilesetHouse.tsx": {
-            "scaleInDock": 2,
+            "scaleInDock": 1.5,
             "scaleInEditor": 1
         },
         "tilesets/TilesetInterior.tsx": {
@@ -161,26 +161,23 @@
     "map.tileWidth": 64,
     "map.width": 20,
     "openFiles": [
-        "pueblo.tmx",
         "tilesets/TilesetHouse.tsx",
         "tilesets/TilesetNature.tsx",
         "tilesets/TilesetFloor.tsx",
         "pradera.tmx",
-        "tilesets/TilesetReliefDetail.tsx",
-        "Castillo.tmx",
-        "calabozo.tmx"
+        "Castillo.tmx"
     ],
     "project": "mazeborg.tiled-project",
     "recentFiles": [
+        "tilesets/TilesetHouse.tsx",
+        "tilesets/TilesetNature.tsx",
+        "tilesets/TilesetFloor.tsx",
+        "pradera.tmx",
         "Castillo.tmx",
         "tilesets/TilesetDungeon.tsx",
         "tilesets/TilesetReliefDetail.tsx",
         "pueblo.tmx",
         "calabozo.tmx",
-        "tilesets/TilesetHouse.tsx",
-        "tilesets/TilesetNature.tsx",
-        "tilesets/TilesetFloor.tsx",
-        "pradera.tmx",
         "tilesets/TilesetFloorB.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",

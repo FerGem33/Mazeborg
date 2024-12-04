@@ -1,6 +1,8 @@
 # Mazeborg
 
-![img.png](assets/images/preview.png)
+![img.png](assets/images/preview3.png)
+
+![img.png](assets/images/preview2.png)
 
 Mazeborg is a videogame intended to teach the basics of programming to children.
 The game is about using blocks of code to give instructions to a cyborg and help him escape from a maze.
